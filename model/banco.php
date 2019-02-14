@@ -1,16 +1,17 @@
 <?php
 
-	/**
-	 * Banco de dados eliteSoft
-	 */
+/**
+  * Classe Banco
+  * Autor: Plínio Araújo
+  */
 	class Conexao{
 		
 		function executaSQL($sql) {
 		
 			
-			$dsn = 'mysql:dbname=eliteSoft;host=localhost';
+			$dsn = 'mysql:dbname=eliteSoft;host=localhost:3307';
 			$user = 'root';
-			$pass = '';			
+			$pass = 'usbw';			
 
 			try{
 	        	$con = new PDO($dsn, $user, $pass);

@@ -1,12 +1,16 @@
 <?php 
 	include_once('banco.php');
+	/**
+  * Classe Pedido
+  * Autor: Plínio Araújo
+  */
 
 	class Pedido{
 
 		public $id_item;
 		public $id_pedido;
 		public $id_cliente;
-		public $id_produto array();
+		public $id_produto = array();
 		public $total;
 
 

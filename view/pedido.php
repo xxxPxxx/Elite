@@ -1,3 +1,13 @@
+<?php
+  
+  /**
+  * View Pedido 
+  * Autor: Plínio Araújo
+  */
+
+
+ ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -77,12 +87,16 @@
        
         <div class="col-lg-10">                    
             <input type="number" name="id_cliente" id="id_cliente" hidden <?php if (isset($cliente)) {echo "value='".$cliente->getId()."'";}?>>
-            <label>Cliente:</label>
-            <input type="text" name="nome" id="nome" disabled  <?php if (isset($cliente)) {echo "value='".$cliente->getNome()."'";}?>>
-
+            <div class=" col-lg-6">
+              <label>Cliente:</label>
+              <input class="form-control" type="text" name="nome" id="nome" disabled  <?php if (isset($cliente)) {echo "value='".$cliente->getNome()."'";}?>>
+            </div>
+            <div class="col-lg-6">
             <label>UF:</label>
-            <input type="text" name="uf" id="uf" disabled  <?php if (isset($cliente)) {echo "value='".$cliente->getUF()."'";}?>>          
+            <input class="form-control" type="text" name="uf" id="uf" disabled  <?php if (isset($cliente)) {echo "value='".$cliente->getUF()."'";}?>>          
+            </div>
         </div>
+
         <div class="col-lg-1">
           <button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal">Clientes</button>             
         </div>
@@ -192,7 +206,9 @@
               <h4 class="modal-title">Selecione um produto</h4>
             </div>
             <div class="modal-body">
-              <select class="form-control" name="produto" required>
+              <div class="form-group">
+              <label for="produto">Produto:</label>
+              <select name="produto" id="produto" required class="form-control">
                 <option value="#" disabled selected>Selecione...</option>
                 <?php
                   $pr = new Produto();
@@ -202,9 +218,10 @@
                   }
                ?>
              </select>
+             </div>
              <div class="form-group">
-              <label>Quantidade :</label>
-             <input placeholder="Quantidade" type="number" name="qtd" id="qtd" required>
+              <label>Quantidade:</label>
+             <input placeholder="Quantidade" type="number" name="qtd" id="qtd" class="form-control " required>
              </div>
             </div>
             <div class="modal-footer">

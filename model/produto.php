@@ -1,6 +1,10 @@
 <?php 
 	
 	include_once('Banco.php');
+	/**
+  * Classe Produto
+  * Autor: Plínio Araújo
+  */
 	
 	class Produto{
 
@@ -89,9 +93,9 @@
 			}
 		}
 
-		function excluir($id){
+		function excluir(){
 			try{
-				$sql = "delete from produto where id_produto = ".$id_produto.";";
+				$sql = "delete from produto where id_produto = ".$this->id_produto.";";
 				$bd = new Conexao();
 				return $bd->executaSQL($sql);
 				unset($bd);

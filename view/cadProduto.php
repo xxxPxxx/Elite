@@ -1,3 +1,13 @@
+<?php
+  
+  /**
+  * View Produto 
+  * Autor: Plínio Araújo
+  */
+
+
+ ?>
+
 <!DOCTYPE html>
 <html>
 <head>

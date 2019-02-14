@@ -1,6 +1,10 @@
 <?php 
 
 include_once('../model/cliente.php');
+/**
+  * Control Cliente
+  * Autor: Plínio Araújo
+  */
 
 session_start();
 
@@ -29,8 +33,8 @@ if(isset($_REQUEST['busca'])){
 	exit();
 }
 
-if($nome == '' && $UF == 0){
-	header("Location: ../view/cliente.php?msg=1");
+if($nome == ' ' && $UF == 0){
+	header("Location: ../view/cadCliente.php?msg=1");
 	exit();
 }
 

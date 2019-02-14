@@ -1,3 +1,15 @@
+
+<?php
+  
+  /**
+  * View Cliente 
+  * Autor: Plínio Araújo
+  */
+
+
+ ?>
+
+
 <!DOCTYPE html>
 <html>
 <head>

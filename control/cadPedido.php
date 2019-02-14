@@ -1,5 +1,9 @@
 <?php
 	session_start();
+	/**
+  * Control Pedido Sessao
+  * Autor: Plínio Araújo
+  */
 
 	header('Access-Control-Allow-Origin: *');
 	include_once('../model/cliente.php');
@@ -47,7 +51,20 @@
 		} else {
 			$itens = array();
 		}
-		$qtd = $_REQUEST['qtd'];
+
+		$qtd = isset($_REQUEST['qtd']) ? $_REQUEST['qtd'] : 0;
+
+		if($qtd == 0){
+			$msg = 1;
+			header("Location: ../view/pedido.php?msg=".$msg);
+			exit();
+		}else{
+			$qtd = $_REQUEST['qtd'];	
+		}
+
+		
+
+
 		$valor = 0;
 		$produto = new Produto();
 		$x = $produto->BuscarP($_REQUEST['id_produto']);
