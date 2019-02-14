@@ -19,7 +19,7 @@ function ajaxGet(obj) {
 			var data = ajax.responseText;
 		// Retorno do Ajax
 			
-			preencherTabela(data);
+			//preencherTabela(data);
 		}
 	}
 } 

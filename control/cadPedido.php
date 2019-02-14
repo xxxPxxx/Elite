@@ -1,24 +1,70 @@
 <?php
-	
+	session_start();
+
 	header('Access-Control-Allow-Origin: *');
 	include_once('../model/cliente.php');
 	include_once('../model/produto.php');
 
-	$id_produto = isset($_REQUEST['id_produto']) ? $_REQUEST['id_produto'] : 0;
-	if($id_produto !=0){
-		$pr = new Produto();
-		$res = $pr->buscarP($id_produto);
-
-		if ($res) {
-			$i = 0;
-			foreach ($res as $reg) {
-				$als[$i]['id_produto']  = $reg['id_produto'];
-				$als[$i]['nome']  = $reg['nome'];
-				$als[$i]['valor']  = $reg['valor'];			
-				$i++;
-			}					
-		}
-		echo json_encode($als);
-		
+/******************Limpar Itens da sessão************************/
+	if(isset($_REQUEST['resetar'])){
+		unset($_SESSION['itensCarrinho']);
+		$msg = 2;
+		header("Location: ../view/pedido.php?msg=".$msg);
+		exit();
 	}
+/*****************************************************************/	
+
+
+/******************Deletar Itens da sessão************************/
+	if(isset($_REQUEST['deletar'])){
+		if(isset($_SESSION['itensCarrinho'])){
+			$itensold = $_SESSION['itensCarrinho'];
+			foreach ($itensold as $i => $item) {
+					if($i != $_REQUEST['deletar']){
+						$itens[]=$item;
+					}
+			}
+			if(!isset($itens)){
+				unset($_SESSION['itensCarrinho']);
+				$msg =2;
+				header("Location: ../view/pedido.php?msg=".$msg);
+				exit();
+			}else{
+				$_SESSION['itensCarrinho'] = $itens; 
+				header("Location: ../view/pedido.php");
+				exit();
+			}
+		}		
+	}
+/*****************************************************************/	
+
+	
+/******************Inclur Itens da sessão************************/
+	
+	if (isset($_REQUEST['id_produto']) && isset($_REQUEST['qtd'])) {
+		if (isset($_SESSION['itensCarrinho'])) {
+			$itens = $_SESSION['itensCarrinho'];
+		} else {
+			$itens = array();
+		}
+		$qtd = $_REQUEST['qtd'];
+		$valor = 0;
+		$produto = new Produto();
+		$x = $produto->BuscarP($_REQUEST['id_produto']);
+		foreach ($x as $key ) {
+			$valor = $qtd * $key['valor'];
+			$itens[] = array($key['id_produto'],$key['nome'],$key['valor'],$qtd, $valor);
+		}
+
+		
+		var_dump($itens);
+		$_SESSION['itensCarrinho'] = $itens;
+		header("Location: ../view/pedido.php");
+		exit();	
+	}
+	$msg =1;
+	header("Location: ../view/pedido.php?msg=".$msg);
+/*****************************************************************/	
+
+	
  ?>

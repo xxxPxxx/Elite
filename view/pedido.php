@@ -15,28 +15,31 @@
     include_once('../model/produto.php');
     include_once('../model/cliente.php');
         
+        session_start();
 
         $msg = isset($_REQUEST['msg']) ? $_REQUEST['msg'] : '';
-        $id_cliente = isset($_REQUEST['id_cliente']) ? $_REQUEST['id_cliente'] : 0;
+        $id_cliente = isset($_REQUEST['id_cliente']) ? $_REQUEST['id_cliente'] : 0;  
 
-
-        if($id_cliente !=0){
-          $cliente = new Cliente();
-          $x = $cliente->buscaCl($id_cliente);
-          foreach ($x as $k){
-            $cliente->setId($k['id_cliente']);
-            $cliente->setNome($k['nome']);
-            $cliente->setUF($k['uf']);
-          }
+        if(isset($_SESSION['cliente'])){
+            $cliente = new Cliente();
+            $x = $_SESSION['cliente'];
+            $cliente->setId($x[0]);
+            $cliente->setNome($x[1]);
+            $cliente->setUF($x[2]);            
+        }else{
+          unset($_SESSION['itensCarrinho']);
 
         }
+     
+       
+         
 
       if ($msg == 1) {
-        echo "<script> alert('Falha ao cadastrar Produto!')</script>";
+        echo "<script> alert('Falha ao Buscar o produto!')</script>";
       }elseif ($msg == 2){
-        echo "<script> alert('Produto Cadastrado com sucesso!')</script>";
+        echo "<script> alert('Carrinho Vazio!')</script>";
       }elseif ($msg == 3) {
-        echo "<script> alert('Produto atualizado com sucesso!')</script>";
+        echo "<script> alert('Falha ao Salvar o pedido')</script>";
       }elseif ($msg == 4) {
         echo "<script> alert('Produto Excluido com sucesso!')</script>";
       }
@@ -70,7 +73,7 @@
     </div>
     <div class="col-sm-8 text-left"> 
       <h1 align="center">Criar Pedido</h1>
-      <form class="form-group col-lg-12 " action="../control/cadProduto.php" method="post">
+      <form class="form-group col-lg-12 " action="../control/pedido.php" method="post">
        
         <div class="col-lg-10">                    
             <input type="number" name="id_cliente" id="id_cliente" hidden <?php if (isset($cliente)) {echo "value='".$cliente->getId()."'";}?>>
@@ -80,8 +83,11 @@
             <label>UF:</label>
             <input type="text" name="uf" id="uf" disabled  <?php if (isset($cliente)) {echo "value='".$cliente->getUF()."'";}?>>          
         </div>
-        <div class="col-lg-2">
-          <button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal">Clientes</button>          
+        <div class="col-lg-1">
+          <button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal">Clientes</button>             
+        </div>
+        <div class="col-lg-1">
+          <button type="button" class="btn btn-default btn-md" ><a href="../control/cadCliente.php?resetar=1"> Limpar</a></button>  
         </div>
         
 
@@ -98,6 +104,33 @@
         </div>
         <div class="col-lg-12">
           <table class="table table-hover table-bordered" id="pedido">
+            <th>ID:</th>
+            <th>Nome</th>
+            <th>Valor Uni.</th>
+            <th>Quantidade</th>
+            <th>Total</th>
+            <th>Ação</th>
+            <tr>
+              <?php 
+                $valor = 0;
+                if(isset($_SESSION['itensCarrinho'])){
+                  $itens = $_SESSION['itensCarrinho'];
+                  foreach ($itens as $key => $item) {
+                    echo "<td>".$item[0]."</td>";
+                    echo "<td>".$item[1]."</td>";
+                    echo "<td>".$item[2]."</td>";
+                    echo "<td>".$item[3]."</td>";
+                    echo "<td>".$item[4]."</td>";
+                    echo "<td><a href='../control/cadPedido.php?deletar='".$key."'>Excluir</a></td>";
+                    
+                    $valor += $item[4];
+                    $total = $valor;
+                    echo "<tr>";
+                  }
+
+                }
+                
+              ?>
             
           </table>          
         </div>
@@ -106,9 +139,31 @@
         </div>
         <div class="col-lg-12">
           <hr>
-          <h5 align="right">Total: </h5>
-          <h5 align="right">Desconto: 0.00 </h5>
-          <h5 align="right">Valor Total:</h5>
+          <h5 align="right">Total: <?php if(isset($total)){echo $total;} ?></h5>
+          <h5 align="right">Desconto: 
+          <?php 
+            if(isset($cliente) && $cliente->getUF() == "PR"){
+                echo "10% ";
+              }else{
+                echo "0.00%";
+              } 
+            ?> 
+          </h5>
+          <h5 align="right">Valor Total: 
+          <?php 
+            if(isset($total)){
+              if($cliente->getUF() == "PR"){
+                $por = ($total * 10)/100; 
+                $vFinal =  $total - $por;
+                $vFinal = number_format($vFinal, 2, '.', '');
+                echo $vFinal;
+                $_SESSION['vFinal'] = $vFinal;
+              }else{
+                echo $total;
+                $_SESSION['vFinal'] = $total;
+              }
+            } 
+            ?></h5>
           
         </div>         
         <div class="col-lg-">
@@ -118,8 +173,8 @@
           <br>
 
           <button type="submit" class="btn btn-success">Salvar</button>
-          <button type="reset" class="btn btn-default" >Limpar</button>
-          <button type="submit" name="excluir" value="exclur" class="btn btn-danger">Excluir</button>    
+          <button type="button" class="btn btn-default" ><a href="../control/cadPedido.php?resetar=1"> Limpar Carrinho</a></button>
+          
           <br>
           <br><br>
         </div>
@@ -137,7 +192,7 @@
               <h4 class="modal-title">Selecione um produto</h4>
             </div>
             <div class="modal-body">
-              <select class="" onchange ="javascript:ajaxGet(this.value);">
+              <select class="form-control" name="produto" required>
                 <option value="#" disabled selected>Selecione...</option>
                 <?php
                   $pr = new Produto();
@@ -145,12 +200,15 @@
                   foreach ($x as $registro ) {
                     echo "<option value='".$registro['id_produto']."'>".$registro['nome']." - R$ ".$registro['valor']."</option>";
                   }
-
                ?>
              </select>
+             <div class="form-group">
+              <label>Quantidade :</label>
+             <input placeholder="Quantidade" type="number" name="qtd" id="qtd" required>
+             </div>
             </div>
             <div class="modal-footer">
-              
+              <a class="btn btn-info" href="#"  onclick="Produto();">Buscar</a>
               <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
             </div>
           </div>
@@ -212,11 +270,20 @@
     }
 
     function abreLink(){
-      var v1 = document.querySelector("[name='clientes']").value;
+      var v1 = document.querySelector("[name='clientes']").value;      
       if(v1 ==''){
         alert('Selecione um Cliente!');
       }else{
-        location.href = "pedido.php?id_cliente="+v1;
+        location.href = "../control/cadCliente.php?busca="+v1;
+      }
+    }    
+     function Produto(){
+      var v1 = document.querySelector("[name='produto']").value;
+      var v2 = document.querySelector("[name='qtd']").value;
+      if(v1 ==''){
+        alert('Selecione um Cliente!');
+      }else{
+        location.href = "../control/cadPedido.php?id_produto="+v1+"&qtd="+v2;
       }
     }    
   
