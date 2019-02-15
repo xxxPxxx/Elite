@@ -1,11 +1,8 @@
-<?php
-  
+<?php  
   /**
   * View Pedido 
   * Autor: Plínio Araújo
   */
-
-
  ?>
 
 <!DOCTYPE html>
@@ -40,9 +37,6 @@
           unset($_SESSION['itensCarrinho']);
 
         }
-     
-       
-         
 
       if ($msg == 1) {
         echo "<script> alert('Falha ao Buscar o produto!')</script>";
@@ -51,7 +45,7 @@
       }elseif ($msg == 3) {
         echo "<script> alert('Falha ao Salvar o pedido')</script>";
       }elseif ($msg == 4) {
-        echo "<script> alert('Produto Excluido com sucesso!')</script>";
+        echo "<script> alert('Pedido salvo com sucesso!')</script>";
       }
   ?>
 
@@ -67,10 +61,10 @@
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="pedido.php">Pedidos</a></li>
+        <li><a href="pedido.php">Pedidos</a></li>
         <li><a href="cadCliente.php">Cadastro Cliente</a></li>
         <li><a href="cadProduto.php">Cadastro Produto</a></li>
-        <li><a href="#">Relatórios</a></li>
+        <li><a href="relatorio.php">Relatórios</a></li>
       </ul>      
     </div>
   </div>
@@ -103,7 +97,6 @@
         <div class="col-lg-1">
           <button type="button" class="btn btn-default btn-md" ><a href="../control/cadCliente.php?resetar=1"> Limpar</a></button>  
         </div>
-        
 
         <div class="col-lg-12">
           <hr>
@@ -114,7 +107,6 @@
             
           </div>
           <br>
-
         </div>
         <div class="col-lg-12">
           <table class="table table-hover table-bordered" id="pedido">

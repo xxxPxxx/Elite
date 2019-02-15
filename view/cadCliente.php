@@ -1,15 +1,10 @@
 
-<?php
-  
+<?php  
   /**
   * View Cliente 
   * Autor: Plínio Araújo
   */
-
-
  ?>
-
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -50,10 +45,10 @@
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="pedido.php">Pedidos</a></li>
+        <li><a href="pedido.php">Pedidos</a></li>
         <li><a href="cadCliente.php">Cadastro Cliente</a></li>
         <li><a href="cadProduto.php">Cadastro Produto</a></li>
-        <li><a href="#">Relatórios</a></li>
+        <li><a href="relatorio.php">Relatórios</a></li>
       </ul>      
     </div>
   </div>

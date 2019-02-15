@@ -9,9 +9,9 @@
 		function executaSQL($sql) {
 		
 			
-			$dsn = 'mysql:dbname=eliteSoft;host=localhost:3307';
+			$dsn = 'mysql:dbname=eliteSoft;host=localhost';
 			$user = 'root';
-			$pass = 'usbw';			
+			$pass = '';			
 
 			try{
 	        	$con = new PDO($dsn, $user, $pass);
